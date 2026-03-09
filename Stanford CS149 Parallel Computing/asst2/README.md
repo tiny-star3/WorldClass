@@ -1,8 +1,8 @@
 
 # Assignment 2: Building A Task Execution Library from the Ground Up #
 
-**作业原址**：[stanford-cs149/asst2: Stanford CS149 -- Assignment 2](https://github.com/stanford-cs149/asst2)
-非常感谢老师的付出和开源，以下是作业介绍和我的实现(特别感谢 Google AI Studio 提供远程指导😝)
+**作业原址**：[stanford-cs149/asst2: Stanford CS149 -- Assignment 2](https://github.com/stanford-cs149/asst2)  
+非常感谢老师的付出和开源，以下是作业介绍和我的实现(特别感谢 Google AI Studio 提供远程指导😝)  
 
 ## Overview ##
 
@@ -38,11 +38,11 @@ The assignment starter code is available on [Github](https://github.com/stanford
 
 **IMPORTANT:** DO NOT modify the provided `Makefile`. Doing so may break our grading script.
 
-myth machines(斯坦福大学计算机科学系（Stanford CS）提供的专供学生使用的公共 Linux 计算集群)
-由于用不了 myth machines，只能在自己电脑跑
-电脑配置：
-处理器	Intel(R) Core(TM) i5-10300H CPU @ 2.50GHz   2.50 GHz	内核：4	逻辑处理器：8
-显卡	NVIDIA GeForce GTX 1660 Ti (6 GB)
+myth machines(斯坦福大学计算机科学系（Stanford CS）提供的专供学生使用的公共 Linux 计算集群)  
+由于用不了 myth machines，只能在自己电脑跑  
+电脑配置：  
+处理器	Intel(R) Core(TM) i5-10300H CPU @ 2.50GHz   2.50 GHz	内核：4	逻辑处理器：8  
+显卡	NVIDIA GeForce GTX 1660 Ti (6 GB)  
 
 ## Part A: Synchronous Bulk Task Launch
 
@@ -289,13 +289,13 @@ Test name: mandelbrot_chunked
 ===================================================================================
 ```
 
-**静态分配 (Static)**：
-	在程序启动前预先分好每个线程负责的范围
-	没有需要保护的共享变量（内部状态）
+**静态分配 (Static)**：  
+	在程序启动前预先分好每个线程负责的范围  
+	没有需要保护的共享变量（内部状态）  
 
-**动态分配 (Dynamic**)：
-	线程竞争一个全局计数器，谁闲着谁就去取下一个任务
-	counter（任务计数器）是需要保护的共享变量（内部状态）
+**动态分配 (Dynamic**)：  
+	线程竞争一个全局计数器，谁闲着谁就去取下一个任务  
+	counter（任务计数器）是需要保护的共享变量（内部状态）  
 
 #### Step 2: Avoid Frequent Thread Creation Using a Thread Pool ####
 
@@ -385,9 +385,9 @@ Test name: mandelbrot_chunked
 ===================================================================================
 ```
 
-子线程通过轮询检查`next_task_idx`是否小于`total_tasks`来确定是否有活干
+子线程通过轮询检查`next_task_idx`是否小于`total_tasks`来确定是否有活干  
 
-使用一个额外的原子计数器`completed_tasks`来确定任务是否完成
+使用一个额外的原子计数器`completed_tasks`来确定任务是否完成  
 
 #### Step 3: Put Threads to Sleep When There is Nothing to Do ####
 
@@ -1195,27 +1195,27 @@ Please submit a brief writeup to the assignment *Assignment 2 (Write-up)* on Gra
   * How did you decide to manage threads? (e.g., did you implement a thread pool?)
     线程池
   * How does your system assign tasks to worker threads? Did you use static or dynamic assignment?
-    在 Part A 中，第一步既实现静态分配也实现了动态分配，静态分配中，系统把总任务数平均分配给各个线程，动态分配中工作线程不再领取固定的数据块，各个线程完成当前任务后，原子化取下一个可以执行的任务并执行，这种方式确保了即使不同任务块的计算量不均，系统也能实现自动的负载均衡，后续第二步和第三步以及Part B也采取动态分配
+    在 Part A 中，第一步既实现静态分配也实现了动态分配，静态分配中，系统把总任务数平均分配给各个线程，动态分配中工作线程不再领取固定的数据块，各个线程完成当前任务后，原子化取下一个可以执行的任务并执行，这种方式确保了即使不同任务块的计算量不均，系统也能实现自动的负载均衡，后续第二步和第三步以及Part B也采取动态分配  
   * How did you track dependencies in Part B to ensure correct execution of task graphs?
-    **引入了任务记录类 task 和多个哈希表进行追踪：**
-    	依赖计数：deps_total 记录每个 TaskID 还有多少个前置依赖未完成
-    	后继查找：deps 记录一个任务完成后需要尝试解锁的所有后续任务 ID
-    	状态维护：id_finished 集合记录已彻底完成的任务。在 runAsyncWithDeps 时，系统会检查依赖项是否已在 id_finished 中。若所有依赖都已完成，任务直接进入 run_queue，否则进入 id_task 等待。当某个任务的最后一个子任务执行完毕时，会递减其后继任务的计数，并在计数归零时将后继任务推入就绪队列
+    **引入了任务记录类 task 和多个哈希表进行追踪： **  
+    	依赖计数：deps_total 记录每个 TaskID 还有多少个前置依赖未完成  
+    	后继查找：deps 记录一个任务完成后需要尝试解锁的所有后续任务 ID  
+    	状态维护：id_finished 集合记录已彻底完成的任务。在 runAsyncWithDeps 时，系统会检查依赖项是否已在 id_finished 中。若所有依赖都已完成，任务直接进入 run_queue，否则进入 id_task 等待。当某个任务的最后一个子任务执行完毕时，会递减其后继任务的计数，并在计数归零时将后继任务推入就绪队列  
 
  2. In Part A, you may have noticed that simpler task system implementations (e.g., a completely serial implementation, or the spawn threads every launch implementation), perform as well as or sometimes better than the more advanced implementations.  Please explain why this is the case, citing certain tests as examples.  For example, in what situations did the sequential task system implementation perform best? Why?  In what situations did the spawn-every-launch implementation perform as well as the more advanced parallel implementations that use a thread pool?  When does it not?
-    **串行实现最优的场景**：
-    	如下面自己实现的`your_test_sync`这种任务负载极轻（payload 仅为一次加法）的场景下，串行版本表现最好
-    	因为在轻量任务中，同步开销（Synchronization Overhead）占主导地位。线程唤醒的延迟、互斥锁的竞争以及上下文切换的耗时，远超任务本身的计算耗时
-    **Always Spawn 的表现**：
-    	在任务量中等且不频繁调用的情况下，Always Spawn 表现尚可。但当任务极短时，它比线程池更高效的原因在于它没有复杂的条件变量等待队列管理。然而，一旦任务规模增大，频繁创建销毁线程的系统调用将显著拖慢性能
+    **串行实现最优的场景**：  
+    	如下面自己实现的`your_test_sync`这种任务负载极轻（payload 仅为一次加法）的场景下，串行版本表现最好  
+    	因为在轻量任务中，同步开销（Synchronization Overhead）占主导地位。线程唤醒的延迟、互斥锁的竞争以及上下文切换的耗时，远超任务本身的计算耗时  
+    **Always Spawn 的表现**：  
+    	在任务量中等且不频繁调用的情况下，Always Spawn 表现尚可。但当任务极短时，它比线程池更高效的原因在于它没有复杂的条件变量等待队列管理。然而，一旦任务规模增大，频繁创建销毁线程的系统调用将显著拖慢性能   
 
  3. Describe one test that you implemented for this assignment. What does the test do, what is it meant to check, and how did you verify that your solution to the assignment did well on your test? Did the result of the test you added cause you to change your assignment implementation?
-    **测试内容**：
-    	实现了一个“异步依赖链压力测试”（`your_test_async`）。该测试提交了 1000 个任务块，每 5 个任务构成一个线性依赖链（A→B→C→D→E），共 200 条链。每个任务必须读取前一个任务修改后的数组元素并执行加 1 操作
-    **检查目的**：
-    	该测试旨在检查两个核心逻辑：依赖触发的正确性(A，B，C，D，E顺序执行)和异步压力下的稳定性(检查系统在大量小任务频繁解锁依赖时，是否会因为 notify 丢失或 run_queue 的并发操作导致死锁)。特别是检查 runAsyncWithDeps 是否能正确处理“即时完成”的依赖（即任务 B 提交时，它依赖的任务 A 可能已经跑完并销毁了）
-    **验证与改进**：
-    	通过该测试，发现最初的系统在处理已完成任务的依赖时会发生死锁。为此，增加了 id_finished 集合来追踪历史任务。测试结果显示，系统在 8 线程下成功通过了所有 1000 个任务的顺序验证，虽然由于同步开销在耗时上（116.537 ms）高于串行，但验证了在高频异步提交下的正确性和线程安全性
+    **测试内容**：  
+    	实现了一个“异步依赖链压力测试”（`your_test_async`）。该测试提交了 1000 个任务块，每 5 个任务构成一个线性依赖链（A→B→C→D→E），共 200 条链。每个任务必须读取前一个任务修改后的数组元素并执行加 1 操作  
+    **检查目的**：  
+    	该测试旨在检查两个核心逻辑：依赖触发的正确性(A，B，C，D，E顺序执行)和异步压力下的稳定性(检查系统在大量小任务频繁解锁依赖时，是否会因为 notify 丢失或 run_queue 的并发操作导致死锁)。特别是检查 runAsyncWithDeps 是否能正确处理“即时完成”的依赖（即任务 B 提交时，它依赖的任务 A 可能已经跑完并销毁了）  
+    **验证与改进**：  
+    	通过该测试，发现最初的系统在处理已完成任务的依赖时会发生死锁。为此，增加了 id_finished 集合来追踪历史任务。测试结果显示，系统在 8 线程下成功通过了所有 1000 个任务的顺序验证，虽然由于同步开销在耗时上（116.537 ms）高于串行，但验证了在高频异步提交下的正确性和线程安全性  
 
     ```C++
     /*

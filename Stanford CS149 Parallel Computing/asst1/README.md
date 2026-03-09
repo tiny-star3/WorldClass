@@ -1,7 +1,7 @@
 # Assignment 1: Performance Analysis on a Quad-Core CPU #
 
-**作业原址**：[stanford-cs149/asst1: Stanford CS149 -- Assignment 1](https://github.com/stanford-cs149/asst1)
-非常感谢老师的付出和开源，以下是作业介绍和我的实现(特别感谢 Google AI Studio 提供远程指导😝)
+**作业原址**：[stanford-cs149/asst1: Stanford CS149 -- Assignment 1](https://github.com/stanford-cs149/asst1)  
+非常感谢老师的付出和开源，以下是作业介绍和我的实现(特别感谢 Google AI Studio 提供远程指导😝)   
 
 ## Overview ##
 
@@ -17,34 +17,34 @@ programming, but a lot of analysis!
 
 ## Environment Setup ##
 
-myth machines(斯坦福大学计算机科学系（Stanford CS）提供的专供学生使用的公共 Linux 计算集群)
-由于用不了 myth machines，只能在自己电脑跑，先搭建本地Linux开发环境
-电脑配置：
-处理器	Intel(R) Core(TM) i5-10300H CPU @ 2.50GHz   2.50 GHz	内核：4	逻辑处理器：8
-显卡	NVIDIA GeForce GTX 1660 Ti (6 GB)
+myth machines(斯坦福大学计算机科学系（Stanford CS）提供的专供学生使用的公共 Linux 计算集群)  
+由于用不了 myth machines，只能在自己电脑跑，先搭建本地Linux开发环境  
+电脑配置：  
+处理器	Intel(R) Core(TM) i5-10300H CPU @ 2.50GHz   2.50 GHz	内核：4	逻辑处理器：8  
+显卡	NVIDIA GeForce GTX 1660 Ti (6 GB)   
 
-**安装WSL2(Windows Subsystem for Linux)**
-1.以管理员权限打开PowerShell，运行: wsl --install
-2.在Microsoft Store下载 Ubuntu 22.04 LTS
-3.优点:你可以在Ubuntu里写C++/CUDA 代码，但依然能用Windows的浏览器看视频、查文档
-[Windows 安装 WSL2 并运行 Ubuntu 22.04 指南本文为 Windows 10 和 Windows - 掘金](https://juejin.cn/post/7503438116234625075)
-[安装 WSL | Microsoft Learn](https://learn.microsoft.com/zh-cn/windows/wsl/install)
-如果显示正在安装: Ubuntu 这时候卡住在0%(微软商店抽风)，那么我们执行如下指令,从GitHub下载
+**安装WSL2(Windows Subsystem for Linux) **   
+1.以管理员权限打开PowerShell，运行: wsl --install  
+2.在Microsoft Store下载 Ubuntu 22.04 LTS  
+3.优点:你可以在Ubuntu里写C++/CUDA 代码，但依然能用Windows的浏览器看视频、查文档  
+[Windows 安装 WSL2 并运行 Ubuntu 22.04 指南本文为 Windows 10 和 Windows - 掘金](https://juejin.cn/post/7503438116234625075)  
+[安装 WSL | Microsoft Learn](https://learn.microsoft.com/zh-cn/windows/wsl/install)  
+如果显示正在安装: Ubuntu 这时候卡住在0%(微软商店抽风)，那么我们执行如下指令,从GitHub下载  
 
 ```bash
 wsl --install -d Ubuntu --web-download
 ```
 
-**配置 CUDA Toolkit**
-1.在 Windows主机安装最新的NVIDIA 驱动
-2.在 WSL2(Ubuntu)里安装 CUDA Toolkit(注意要选Linux-WSL 版本)
-3.安装完成后，输入nvcc -V, 看到版本号即表示成功
-[WLS2安装CUDA保姆级教程_wsl2 cuda-CSDN博客](https://blog.csdn.net/qq_46472656/article/details/138624468)
+**配置 CUDA Toolkit**  
+1.在 Windows主机安装最新的NVIDIA 驱动  
+2.在 WSL2(Ubuntu)里安装 CUDA Toolkit(注意要选Linux-WSL 版本)  
+3.安装完成后，输入nvcc -V, 看到版本号即表示成功  
+[WLS2安装CUDA保姆级教程_wsl2 cuda-CSDN博客](https://blog.csdn.net/qq_46472656/article/details/138624468)  
 
-**IDE选择**
-使用Vs Code，并安装"Remote - WSL"扩展
-这样你可以在 Windows界面操作，但所有的编译和运行都在WSL2的Linux环境下进行
-[开始将 VS Code 与 WSL 配合使用 | Microsoft Learn](https://learn.microsoft.com/zh-cn/windows/wsl/tutorials/wsl-vscode)
+**IDE选择 **  
+使用Vs Code，并安装"Remote - WSL"扩展  
+这样你可以在 Windows界面操作，但所有的编译和运行都在WSL2的Linux环境下进行  
+[开始将 VS Code 与 WSL 配合使用 | Microsoft Learn](https://learn.microsoft.com/zh-cn/windows/wsl/tutorials/wsl-vscode)  
 
 To get started:
 
@@ -660,34 +660,34 @@ You will not need to make use of any other std::thread API calls in this assignm
 
    ![image-20260102155513876](README/image-20260102155513876.png)
 
-   **1.速度提升（Speedup）是否为线性？**
-   **结论：** 不，View 1 的速度提升显著非线性。
-   虽然随着线程数增加，性能整体呈上升趋势，但在 3 线程处出现了明显的性能倒退，且在 6 到 7 线程之间几乎没有提升。最终在 8 个线程下的加速比（3.66x）远低于 8x 的理论线性增长，甚至低于物理核心数（4核）
+   **1.速度提升（Speedup）是否为线性？**  
+   **结论：** 不，View 1 的速度提升显著非线性  
+   虽然随着线程数增加，性能整体呈上升趋势，但在 3 线程处出现了明显的性能倒退，且在 6 到 7 线程之间几乎没有提升。最终在 8 个线程下的加速比（3.66x）远低于 8x 的理论线性增长，甚至低于物理核心数（4核）   
 
-   **2.为什么是非线性的？**
-   **A. 软件维度：静态分块导致的负载不均衡 (Load Imbalance)**
-   由于实验采用静态分块策略（将图像水平切分成 N 个连续的行块），性能高度依赖于每一块中“白色区域”的分布
-   	白色区域 = 极高计算量：在 Mandelbrot 算法中，白色区域的点必须跑满最大迭代次数（Max Iterations），而黑色区域很快就发散退出
-   	View 1 的“中心瓶颈”效应：
-   		观察 View 1，图像正中间有一颗巨大的白色“心脏”。这意味着图像中间行的计算量远超边缘行
-   		3 线程的性能倒退 (1.6x)：
-   			当 N=3 时，图像被切成顶、中、底三份。线程 1 独自承包了整颗白色心脏最宽、最重的中心部分
-   			线程 0 和 2 因为负责边缘黑色区域，会极速完成并进入空转。程序总时长取决于最慢的线程 1。此时 4 个物理核心中只有 1 个在满载工作，导致其性能甚至不如 2 线程（2 线程时，中间的重负载由两人平分）
-   	5-6-7 线程的“锯齿”波动：
-   		6 线程 (偶数)：中心线成为切块边界，最重的中心负载被**平分**给了中间的两个线程，瓶颈被打破，因此出现陡增
-   		7 线程 (奇数)：中心又出现了一个独立的重负载切块，再次成为全队必须等待的“最短板”，导致多加一个线程也几乎没有性能收益
-   **B. 硬件维度：物理核心 vs. 超线程 (Hyper-threading)**
-   	i5-10300H 拥有 4 个物理核心
-   	1 至 4 线程：操作系统优先将线程分配给不同的物理核心。每个线程拥有独立的执行单元（ALU），因此在避开 3 线程这种极端不平衡的情况下，提速较为明显
-   	5 至 8 线程：开始利用逻辑处理器（超线程）
-   	资源竞争：Mandelbrot 是典型的计算密集型（Compute-bound）任务。在 i5-10300H 中，同一物理核心的两个逻辑线程必须共享同一套算术逻辑单元（ALU）
-   	收益递减：由于物理核心的计算资源已被前 4 个线程填满，后 4 个逻辑线程无法提供实质性的额外算力。超线程主要用于隐藏内存延迟，但在这种满负荷数学运算中效果甚微，因此 4 线程后的曲线明显变平
+   **2.为什么是非线性的？ **  
+   **A. 软件维度：静态分块导致的负载不均衡 (Load Imbalance)**  
+   由于实验采用静态分块策略（将图像水平切分成 N 个连续的行块），性能高度依赖于每一块中“白色区域”的分布  
+   	白色区域 = 极高计算量：在 Mandelbrot 算法中，白色区域的点必须跑满最大迭代次数（Max Iterations），而黑色区域很快就发散退出  
+   	View 1 的“中心瓶颈”效应：  
+   		观察 View 1，图像正中间有一颗巨大的白色“心脏”。这意味着图像中间行的计算量远超边缘行  
+   		3 线程的性能倒退 (1.6x)：  
+   			当 N=3 时，图像被切成顶、中、底三份。线程 1 独自承包了整颗白色心脏最宽、最重的中心部分  
+   			线程 0 和 2 因为负责边缘黑色区域，会极速完成并进入空转。程序总时长取决于最慢的线程 1。此时 4 个物理核心中只有 1 个在满载工作，导致其性能甚至不如 2 线程（2 线程时，中间的重负载由两人平分）  
+   	5-6-7 线程的“锯齿”波动：  
+   		6 线程 (偶数)：中心线成为切块边界，最重的中心负载被**平分**给了中间的两个线程，瓶颈被打破，因此出现陡增  
+   		7 线程 (奇数)：中心又出现了一个独立的重负载切块，再次成为全队必须等待的“最短板”，导致多加一个线程也几乎没有性能收益  
+   **B. 硬件维度：物理核心 vs. 超线程 (Hyper-threading)**  
+   	i5-10300H 拥有 4 个物理核心  
+   	1 至 4 线程：操作系统优先将线程分配给不同的物理核心。每个线程拥有独立的执行单元（ALU），因此在避开 3 线程这种极端不平衡的情况下，提速较为明显  
+   	5 至 8 线程：开始利用逻辑处理器（超线程）  
+   	资源竞争：Mandelbrot 是典型的计算密集型（Compute-bound）任务。在 i5-10300H 中，同一物理核心的两个逻辑线程必须共享同一套算术逻辑单元（ALU）  
+   	收益递减：由于物理核心的计算资源已被前 4 个线程填满，后 4 个逻辑线程无法提供实质性的额外算力。超线程主要用于隐藏内存延迟，但在这种满负荷数学运算中效果甚微，因此 4 线程后的曲线明显变平   
 
-   **3.View 2 的对比**
+   **3.View 2 的对比**    
 
-   **View 2 的表现**：曲线比 View 1 平滑且高效得多（8 线程达到 3.97x，接近 4 核物理极限）
-   **原因**：View 2 是 66 倍缩放后的局部。图像中白色和黑色区域呈交错的“树叉状”分布
-   **结论**：即使使用简单的水平分块，View 2 每一块分配到的黑白比例也相对均衡。这证明了 View 1 的性能问题根源在于工作量分布的极端不均
+   **View 2 的表现**：曲线比 View 1 平滑且高效得多（8 线程达到 3.97x，接近 4 核物理极限）  
+   **原因**：View 2 是 66 倍缩放后的局部。图像中白色和黑色区域呈交错的“树叉状”分布  
+   **结论**：即使使用简单的水平分块，View 2 每一块分配到的黑白比例也相对均衡。这证明了 View 1 的性能问题根源在于工作量分布的极端不均  
 
 3. To confirm (or disprove(推翻)) your hypothesis, measure the amount of time each thread requires to complete its work by inserting timing code at the beginning and end of `workerThreadStart()`. How do your measurements explain the speedup graph you previously created?
 
@@ -1214,12 +1214,12 @@ You will not need to make use of any other std::thread API calls in this assignm
                                    (3.95x speedup from 8 threads)
    ```
 
-   符合问题二中假设
+   符合问题二中假设   
 
 4. Modify the mapping of work to threads to achieve to improve speedup to at __about 7-8x on both views__ of the Mandelbrot set (if you're above 7x that's fine, don't sweat it). You may not use any synchronization between threads in your solution. We are expecting you to come up with a single work decomposition policy that will work well for all thread counts---hard coding a solution specific to each configuration is not allowed! (Hint: There is a very simple static assignment that will achieve this goal, and no communication/synchronization among threads is necessary.). In your writeup, describe your approach to parallelization
    and report the final 8-thread speedup obtained. 
 
-   **交替行分配**
+   **交替行分配**    
 
    ```C++
    void workerThreadStart(WorkerArgs * const args) {
@@ -1341,9 +1341,9 @@ You will not need to make use of any other std::thread API calls in this assignm
                                    (6.24x speedup from 8 threads)
    ```
 
-   只能达到6x，达不到7-8x，可能是硬件原因
+   只能达到6x，达不到7-8x，可能是硬件原因   
 
-   **另外一个方法按小块划分(需要知道Cache块大小)**
+   **另外一个方法按小块划分(需要知道Cache块大小)**   
 
 5. Now run your improved code with 16 threads. Is performance noticably greater than when running with eight threads? Why or why not? 
 
@@ -1525,8 +1525,8 @@ You will not need to make use of any other std::thread API calls in this assignm
                                    (5.46x speedup from 16 threads)
    ```
 
-   性能无任何提升，甚至下降
-   因为一个时刻内最多装配8个线程，4 个物理核心中的每一个都通过超线程技术同时处理 2 个线程，当运行 16 个线程时，操作系统必须进行上下文切换（Context Switching）。它会让前 8 个线程跑一会，然后强行把它们切下来，换后 8 个线程上去，操作系统上下文切换显著慢于硬件线程上下文切换
+   性能无任何提升，甚至下降   
+   因为一个时刻内最多装配8个线程，4 个物理核心中的每一个都通过超线程技术同时处理 2 个线程，当运行 16 个线程时，操作系统必须进行上下文切换（Context Switching）。它会让前 8 个线程跑一会，然后强行把它们切下来，换后 8 个线程上去，操作系统上下文切换显著慢于硬件线程上下文切换   
 
 ## Program 2: Vectorizing Code Using SIMD Intrinsics (20 points) ##
 
@@ -1696,7 +1696,7 @@ shows the percentage of vector lanes that are enabled.
    .@@@ Failed!!!
    ```
 
-   随着 VECTOR_WIDTH 增加，Vector Utilization 下降
+   随着 VECTOR_WIDTH 增加，Vector Utilization 下降  
    因为 VECTOR_WIDTH 越大，向量操作的掩码中包含的禁用通道可能越多
 
 3. _Extra credit: (1 point)_ Implement a vectorized version of `arraySumSerial` in `arraySumVector`. Your implementation may assume that `VECTOR_WIDTH` is a factor(因数) of the input array size `N`. Whereas the(而) serial implementation runs in `O(N)` time, your implementation should aim for runtime of `(N / VECTOR_WIDTH + VECTOR_WIDTH)` or even `(N / VECTOR_WIDTH + log2(VECTOR_WIDTH))`  You may find the `hadd` and `interleave` operations useful.
@@ -1895,17 +1895,17 @@ the foreach loop to yield(实现) a more straightforward(简洁的) implementati
                                    (4.20x speedup from ISPC)
    ```
 
-   **理论极限**：受限于 8-wide vector execution unit，理论上限为 8x
+   **理论极限**：受限于 8-wide vector execution unit，理论上限为 8x   
 
-   **瓶颈**：Mandelbrot 的工作量（迭代次数）具有数据依赖性，导致 SIMD 单元出现 **分歧 (Divergence)**，只有 4.83x
+   **瓶颈**：Mandelbrot 的工作量（迭代次数）具有数据依赖性，导致 SIMD 单元出现 **分歧 (Divergence)**，只有 4.83x   
 
-   **计算特性**：Mandelbrot 算法是一个**条件依赖**的循环。每个像素点何时停止计算（跳出循环）取决于该点的坐标值是否发散
-   **挑战区域：分形集合的边界（Edges / Boundaries）**
-   内部区域（白色）：所有像素都要运行满最大迭代次数（Max Iterations），步调一致，SIMD 效率极高
-   远外区域（纯黑）：所有像素都很快发散退出，步调也一致，效率同样很高
-   边界区域（灰度/彩色边缘）：这是最难处理的地方。在分形集的边缘，相邻像素的计算量可能差异巨大。一个 8 像素的向量块中很可能既包含“秒出”的像素，也包含“死磕”的像素。这种迭代次数的高度不一致导致了严重的分歧，大幅拉低了加速比
+   **计算特性**：Mandelbrot 算法是一个**条件依赖**的循环。每个像素点何时停止计算（跳出循环）取决于该点的坐标值是否发散   
+   **挑战区域：分形集合的边界（Edges / Boundaries）**   
+   内部区域（白色）：所有像素都要运行满最大迭代次数（Max Iterations），步调一致，SIMD 效率极高   
+   远外区域（纯黑）：所有像素都很快发散退出，步调也一致，效率同样很高   
+   边界区域（灰度/彩色边缘）：这是最难处理的地方。在分形集的边缘，相邻像素的计算量可能差异巨大。一个 8 像素的向量块中很可能既包含“秒出”的像素，也包含“死磕”的像素。这种迭代次数的高度不一致导致了严重的分歧，大幅拉低了加速比    
 
-   **视图差异**：View 2 因为拥有更密集的“非均匀计算区域”（分形边界），导致硬件资源浪费比 View 1 更严重
+   **视图差异**：View 2 因为拥有更密集的“非均匀计算区域”（分形边界），导致硬件资源浪费比 View 1 更严重   
 
   We remind you that for the code described in this subsection(小节), the ISPC
   compiler maps gangs of program instances to SIMD instructions executed
@@ -1949,9 +1949,9 @@ different CPU cores).
                                     (9.51x speedup from task ISPC)
     ```
     
-    **ISPC Speedup (4.83x)**：这是**单核**上的并行收益（由于分支分歧，未达到理论 8x）
-    **Task ISPC Speedup (9.51x)**：这是**多核 + 单核 SIMD** 的总收益
-    **Relative Speedup (1.97x)**：任务系统成功将工作分发到了两个 CPU 核心
+    **ISPC Speedup (4.83x)**：这是**单核**上的并行收益（由于分支分歧，未达到理论 8x）   
+    **Task ISPC Speedup (9.51x)**：这是**多核 + 单核 SIMD** 的总收益   
+    **Relative Speedup (1.97x)**：任务系统成功将工作分发到了两个 CPU 核心   
     
 2. There is a simple way to improve the performance of
    `mandelbrot_ispc --tasks` by changing the number of tasks the code
@@ -2001,13 +2001,13 @@ different CPU cores).
                                    (29.68x speedup from task ISPC)
    ```
 
-   the number of tasks 是16时，speedup 达到最大，32的话和16相等，继续增加开始下降
+   the number of tasks 是16时，speedup 达到最大，32的话和16相等，继续增加开始下降   
 
-   任务数量（Number of Tasks）的确定方法
-   **基准参考**：由于拥有 **8 个逻辑线程**，并行的起点通常设为 8
-   **超额认购（Oversubscription）策略**：在并行计算中，为了隐藏负载不均衡，通常会创建多于核心数的任务。我先后测试了 8、16、32、64 及 128 个任务，最终选择 **16** 作为最优任务数
+   任务数量（Number of Tasks）的确定方法   
+   **基准参考**：由于拥有 **8 个逻辑线程**，并行的起点通常设为 8   
+   **超额认购（Oversubscription）策略**：在并行计算中，为了隐藏负载不均衡，通常会创建多于核心数的任务。我先后测试了 8、16、32、64 及 128 个任务，最终选择 **16** 作为最优任务数   
 
-   **负载均衡（Load Balancing） vs. 调度开销（Scheduling Overhead）**
+   **负载均衡（Load Balancing） vs. 调度开销（Scheduling Overhead）**   
 
 3. _Extra Credit: (2 points)_ What are differences between the thread
    abstraction (used in Program 1) and the ISPC task abstraction? There
@@ -2026,13 +2026,13 @@ different CPU cores).
    | **负载均衡** |   较差，由 OS 强制抢占式调度   | **极佳**，线程主动领取任务（类似自助餐） |
    |   **语义**   |     "帮我运行这个**线程**"     |         "帮我完成这部分**工作**"         |
 
-   **A. 启动 10,000 个线程（OS Threads）—— 灾难性的**
+   **A. 启动 10,000 个线程（OS Threads）—— 灾难性的**      
 
-   - **内存开销**：每个操作系统线程都需要独立的**栈空间（Stack Space）**，通常默认为 1MB 到 8MB。启动 10,000 个线程仅栈内存就可能占用 10GB 到 80GB，极易导致内存耗尽（OOM）
+   - **内存开销**：每个操作系统线程都需要独立的**栈空间（Stack Space）**，通常默认为 1MB 到 8MB。启动 10,000 个线程仅栈内存就可能占用 10GB 到 80GB，极易导致内存耗尽（OOM）  
    - **调度开销（上下文切换）**：操作系统必须在 10,000 个线程之间进行切换。由于线程数远超 CPU 核心数，CPU 会花费大量时间在“保存现场”和“恢复现场”（Context Switching）上，而不是在做实际计算。这被称为**线程抖动（Thrashing）**
    - **结论**：系统会变得极慢，甚至崩溃
 
-   **B. 启动 10,000 个 ISPC 任务（Tasks）—— 高效且轻松**
+   **B. 启动 10,000 个 ISPC 任务（Tasks）—— 高效且轻松**    
 
    - **内存开销**：任务是非常轻量级的。ISPC 运行时（Runtime）只是在内存中维护一个**任务队列（Task Queue）**。每个任务只需记录一些元数据（如参数和函数指针），占用空间极小。
    - **调度机制（工作线程池）**：ISPC 会预先创建一组**工作线程池（Worker Thread Pool）**，数量通常等于 CPU 的逻辑核心数（例如你的机器上是 8 个）。
@@ -2049,28 +2049,28 @@ _Answer_: Great question! And there are a lot of possible answers. Come to
 office hours.
 **将“单核内的向量并行”与“多核间的任务并行”显式地分开**
 
-1. **映射到不同的硬件层次（Hierarchical Parallelism）**
-   现代 CPU 是分层并行的，ISPC 的设计精确地对应了这种硬件结构：
-   	**foreach 对应 SIMD 单元**：它利用单核内部的向量寄存器（如 AVX2 的 8 路宽度）。它的目标是实现**数据级并行**
-   	**launch 对应 物理核心（Cores）**：它利用主板上的多个独立 CPU 核心。它的目标是实现**任务级并行**
-   如果将两者合并，程序员将失去对这种层次结构的控制，导致无法针对具体的硬件布局进行优化
-2. **开销（Overhead）的差异极大**
-   **foreach 是几乎零开销的**：它只是让编译器生成不同的指令（用向量指令代替标量指令）。它不涉及操作系统调度、不涉及线程同步，也不涉及任务队列
-   **launch 是有开销的**：启动一个任务涉及到将任务放入队列、可能的上下文切换、以及工作线程的调度
-   **结论**：如果你有一个循环只迭代 100 次，使用 foreach 会由于 SIMD 而提速；但如果系统自动将其 launch 到多个核心，**任务调度的开销会远超计算本身的收益**，程序反而会变慢。显式的 launch 迫使程序员思考“这个任务是否足够重，值得分发到另一个核心？”
-3. **内存局部性与缓存（Memory Locality）**
-   **foreach 在同一个缓存层级工作**：同一核心内的所有 SIMD 通道共享 L1/L2 缓存。数据通常是连续的，缓存命中率极高
-   **launch 涉及跨核心数据移动**：将工作分发到另一个核心意味着数据可能需要从一个核心的缓存移动到另一个核心，或者从内存中重新读取
-   如果系统自动分发 foreach，可能会在程序员不经意间造成大量的**缓存失效（Cache Miss）**和总线流量，导致性能不可预测
-4. **粒度控制（Granularity Control）与负载均衡**
-   foreach 的粒度非常细（指令级）
-   launch 的粒度通常较粗（任务级）
-   **ISPC 的哲学是：** 程序员最清楚如何平衡“任务数量”和“每个任务的工作量”
-   	如果你有 10,000 个 foreach 迭代，你可以选择 launch 16 个任务，每个任务跑约 600 个 foreach
-   	这种**混合模式**（多核运行多个任务，每个任务内部使用 SIMD）是压榨现代 CPU 性能的最优解
+1. **映射到不同的硬件层次（Hierarchical Parallelism） **  
+   现代 CPU 是分层并行的，ISPC 的设计精确地对应了这种硬件结构：   
+   	**foreach 对应 SIMD 单元**：它利用单核内部的向量寄存器（如 AVX2 的 8 路宽度）。它的目标是实现**数据级并行**   
+   	**launch 对应 物理核心（Cores）**：它利用主板上的多个独立 CPU 核心。它的目标是实现**任务级并行**   
+   如果将两者合并，程序员将失去对这种层次结构的控制，导致无法针对具体的硬件布局进行优化   
+2. **开销（Overhead）的差异极大**   
+   **foreach 是几乎零开销的**：它只是让编译器生成不同的指令（用向量指令代替标量指令）。它不涉及操作系统调度、不涉及线程同步，也不涉及任务队列   
+   **launch 是有开销的**：启动一个任务涉及到将任务放入队列、可能的上下文切换、以及工作线程的调度   
+   **结论**：如果你有一个循环只迭代 100 次，使用 foreach 会由于 SIMD 而提速；但如果系统自动将其 launch 到多个核心，**任务调度的开销会远超计算本身的收益**，程序反而会变慢。显式的 launch 迫使程序员思考“这个任务是否足够重，值得分发到另一个核心？”   
+3. **内存局部性与缓存（Memory Locality）**   
+   **foreach 在同一个缓存层级工作**：同一核心内的所有 SIMD 通道共享 L1/L2 缓存。数据通常是连续的，缓存命中率极高   
+   **launch 涉及跨核心数据移动**：将工作分发到另一个核心意味着数据可能需要从一个核心的缓存移动到另一个核心，或者从内存中重新读取   
+   如果系统自动分发 foreach，可能会在程序员不经意间造成大量的**缓存失效（Cache Miss）**和总线流量，导致性能不可预测   
+4. **粒度控制（Granularity Control）与负载均衡**   
+   foreach 的粒度非常细（指令级）    
+   launch 的粒度通常较粗（任务级）   
+   **ISPC 的哲学是：** 程序员最清楚如何平衡“任务数量”和“每个任务的工作量”   
+   	如果你有 10,000 个 foreach 迭代，你可以选择 launch 16 个任务，每个任务跑约 600 个 foreach   
+   	这种**混合模式**（多核运行多个任务，每个任务内部使用 SIMD）是压榨现代 CPU 性能的最优解    
 
-让 foreach 专注于**“单核内如何跑得快”**（向量化）
-让 launch 专注于**“如何用满所有核心”**（多核化）
+让 foreach 专注于**“单核内如何跑得快”**（向量化）   
+让 launch 专注于**“如何用满所有核心”**（多核化）    
 
 ## Program 4: Iterative `sqrt` (15 points) ##
 
@@ -2130,9 +2130,9 @@ Note: This problem is a review to double-check(巩固) your understanding, as it
                                     (38.77x speedup from task ISPC)
     ```
     
-    **SIMD 层面**：消除了向量通道间的分歧，确保所有 8 个 AVX2 通道始终满载，从而将 SIMD 加速比推向极致
-    **多核层面**：消除了任务间的负载不均衡。由于每个任务的执行时间完全一致，彻底解决了“木桶效应”，使得多核并行效率（Task Speedup）达到了硬件物理极限
-    **最终成效**：这种“最重且最整齐”的负载让程序从单核标量执行的 4.2 秒大幅缩减至多核向量执行的 0.1 秒，实现了近 39 倍的综合加速
+    **SIMD 层面**：消除了向量通道间的分歧，确保所有 8 个 AVX2 通道始终满载，从而将 SIMD 加速比推向极致   
+    **多核层面**：消除了任务间的负载不均衡。由于每个任务的执行时间完全一致，彻底解决了“木桶效应”，使得多核并行效率（Task Speedup）达到了硬件物理极限   
+    **最终成效**：这种“最重且最整齐”的负载让程序从单核标量执行的 4.2 秒大幅缩减至多核向量执行的 0.1 秒，实现了近 39 倍的综合加速   
     
 3. Construct a specific input for `sqrt` that __minimizes speedup for ISPC (without-tasks) over the sequential version of the code__. Describe this input, describe why you chose it, and report the resulting relative performance of the ISPC implementations. What is the reason for the loss in efficiency? 
    __(keep in mind we are using the `--target=avx2` option for ISPC, which generates 8-wide SIMD instructions)__. 
@@ -2163,31 +2163,32 @@ Note: This problem is a review to double-check(巩固) your understanding, as it
                                    (5.34x speedup from task ISPC)
    ```
 
-   将数组中的元素每 8 个分为一组。在每一组中，将其中 7 个通道设为极易收敛的值（如 1.0f），而将剩下的 1 个通道设为需要大量迭代才能收敛的繁重值（如 2.999999f）
+   将数组中的元素每 8 个分为一组。在每一组中，将其中 7 个通道设为极易收敛的值（如 1.0f），而将剩下的 1 个通道设为需要大量迭代才能收敛的繁重值（如 2.999999f）   
    **原因：最大化 SIMD 通道分歧（Lane Divergence）**
-   **硬件背景**：由于 ISPC 被配置为生成 **8 路 AVX2 向量指令**，它会强行将 8 个连续的数据点打包进一个 SIMD 寄存器中同时处理**SIMD 执行特性**：在 SIMD 架构下，一个向量内的 8 个通道必须步调一致地执行相同的指令
-   **制造冲突**：牛顿迭代法是一个基于条件的循环。通过这种设置，我们确保每一组 8 路运算中都包含了一个“害群之马”
-
-   **效率损失（性能下降）的原因**
-   极端的通道分歧（Lane Divergence）
-   	在每一组 8 路向量计算中，7 个处理 1.0f 的通道在进行第 1 次迭代后就已经算完了，但它们不能退出
-   	由于 SIMD 必须同步执行，这 7 个通道会被硬件“掩码（Masking）”掉并原地**空转等待**，直到那 1 个处理 2.999999f 的通道完成所有成百上千次的迭代
-   	**对比串行版**：串行 CPU 可以极速处理完那 7 个简单任务，然后只在那 1 个重任务上花时间。而 ISPC 则是为**每一组** 8 个元素都付出了执行最重任务的时间成本
-   管理开销超过并行收益
-   	ISPC 在处理向量化时需要额外的开销来管理掩码状态（Masking）、维护向量上下文以及处理分支逻辑
-   	在这种极端情况下，SIMD 带来的并行增益几乎为零（因为 8 个通道里只有 1 个在干有效活），而这些**额外的硬件/软件管理开销**反而拖累了速度，导致最终性能甚至不如最原始的标量循环
-
+   **硬件背景**：由于 ISPC 被配置为生成 **8 路 AVX2 向量指令**，它会强行将 8 个连续的数据点打包进一个 SIMD 寄存器中同时处理   
+   **SIMD 执行特性**：在 SIMD 架构下，一个向量内的 8 个通道必须步调一致地执行相同的指令   
+**制造冲突**：牛顿迭代法是一个基于条件的循环。通过这种设置，我们确保每一组 8 路运算中都包含了一个“害群之马”    
+   
+   **效率损失（性能下降）的原因**   
+   极端的通道分歧（Lane Divergence）   
+   	在每一组 8 路向量计算中，7 个处理 1.0f 的通道在进行第 1 次迭代后就已经算完了，但它们不能退出   
+   	由于 SIMD 必须同步执行，这 7 个通道会被硬件“掩码（Masking）”掉并原地**空转等待**，直到那 1 个处理 2.999999f 的通道完成所有成百上千次的迭代   
+   	**对比串行版**：串行 CPU 可以极速处理完那 7 个简单任务，然后只在那 1 个重任务上花时间。而 ISPC 则是为**每一组** 8 个元素都付出了执行最重任务的时间成本   
+   管理开销超过并行收益   
+   	ISPC 在处理向量化时需要额外的开销来管理掩码状态（Masking）、维护向量上下文以及处理分支逻辑   
+	在这种极端情况下，SIMD 带来的并行增益几乎为零（因为 8 个通道里只有 1 个在干有效活），而这些**额外的硬件/软件管理开销**反而拖累了速度，导致最终性能甚至不如最原始的标量循环    
+   
 4. _Extra Credit: (up to 2 points)_ Write your own version of the `sqrt` 
     function manually(手动) using AVX2 intrinsics. To get credit your 
    implementation should be nearly as fast (or faster) than the binary 
    produced using ISPC. You may find the [Intel Intrinsics Guide](https://software.intel.com/sites/landingpage/IntrinsicsGuide/) 
    very helpful.
 
-   查看CPU是否支持 AVX2 intrinsics
-   [英特尔® 酷睿™ i5-10300H 处理器](https://www.intel.cn/content/www/cn/zh/products/sku/201839/intel-core-i510300h-processor-8m-cache-up-to-4-50-ghz/specifications.html)
-   AVX2指令
-   [AVX2指令-CSDN博客](https://blog.csdn.net/fyire/article/details/120826881)
-   支持 AVX2 的处理器向后兼容 AVX
+   查看CPU是否支持 AVX2 intrinsics   
+   [英特尔® 酷睿™ i5-10300H 处理器](https://www.intel.cn/content/www/cn/zh/products/sku/201839/intel-core-i510300h-processor-8m-cache-up-to-4-50-ghz/specifications.html)   
+   AVX2指令   
+   [AVX2指令-CSDN博客](https://blog.csdn.net/fyire/article/details/120826881)   
+   支持 AVX2 的处理器向后兼容 AVX   
 
    ```C++
    // 增加 sqrt_intrinsics.cpp
@@ -2270,8 +2271,8 @@ Note: This problem is a review to double-check(巩固) your understanding, as it
                                    (5.43x speedup from intrinsics)
    ```
 
-   **Intel® Intrinsics（内联函数）只会分配到“单个核心”上的“单个线程”执行**
-   它们提供的是**数据级并行（SIMD）**，而不是**任务级并行（多核并行）**
+   **Intel® Intrinsics（内联函数）只会分配到“单个核心”上的“单个线程”执行**   
+   它们提供的是**数据级并行（SIMD）**，而不是**任务级并行（多核并行）**   
 
 ## Program 5: BLAS `saxpy` (10 points) ##
 
@@ -2296,41 +2297,41 @@ elements used. `saxpy` is a *trivially(微不足道地) parallelizable computati
                                     (1.06x speedup from use of tasks)
     ```
     
-    **“内存受限”（Memory-bound）状态** 
-    **计算强度极低**：SAXPY 对每 3 个内存操作（加载 `X`、加载 `Y`、存储结果）只进行 2 次浮点运算（一次乘法、一次加法）。这意味着 CPU 处理数据的速度远快于内存供应数据的速度
-    程序已经达到了约 **26 GB/s** 的内存带宽，这接近了硬件的极限。在这种情况下，瓶颈在于数据从内存移动到 CPU 的速度，而非 CPU 的计算能力
+    **“内存受限”（Memory-bound）状态**    
+    **计算强度极低**：SAXPY 对每 3 个内存操作（加载 `X`、加载 `Y`、存储结果）只进行 2 次浮点运算（一次乘法、一次加法）。这意味着 CPU 处理数据的速度远快于内存供应数据的速度   
+    程序已经达到了约 **26 GB/s** 的内存带宽，这接近了硬件的极限。在这种情况下，瓶颈在于数据从内存移动到 CPU 的速度，而非 CPU 的计算能力   
     
-    **改进潜力**：**不能**显著提高。由于受限于物理内存带宽，增加更多任务（Task）无法提供线性加速。SAXPY 的性能取决于内存系统的性能，而非核心数量
+    **改进潜力**：**不能**显著提高。由于受限于物理内存带宽，增加更多任务（Task）无法提供线性加速。SAXPY 的性能取决于内存系统的性能，而非核心数量   
     
 2. __Extra Credit:__ (1 point) Note that the total memory bandwidth consumed computation in `main.cpp` is `TOTAL_BYTES = 4 * N * sizeof(float);`.  Even though `saxpy` loads one element from X, one element from Y, and writes one element to `result` the multiplier by 4 is correct.  Why is this the case? (Hint, think about how CPU caches work.)
 
-    **CPU 缓存的写分配（Write Allocation）策略**
-    **写缺失（Write Miss）**：由于 result 是一个新的数组，它的数据不在 CPU 缓存中
-    **写分配（Write Allocation）**：为了保持缓存的一致性，CPU 默认不能直接只写 4 个字节到内存。它必须先将 result[i] 所在的整条 64 字节缓存行 从主内存读入 CPU 缓存。这一步被称为 **“读取所有权”（Read for Ownership, RFO）**
-    **在缓存中修改**：数据读入缓存后，CPU 在缓存里修改对应的 4 个字节（计算结果）
-    **写回（Write Back）**：等到该缓存行被换出（Evict）或者程序结束时，整条缓存行会被写回到主内存
+    **CPU 缓存的写分配（Write Allocation）策略**   
+    **写缺失（Write Miss）**：由于 result 是一个新的数组，它的数据不在 CPU 缓存中   
+    **写分配（Write Allocation）**：为了保持缓存的一致性，CPU 默认不能直接只写 4 个字节到内存。它必须先将 result[i] 所在的整条 64 字节缓存行 从主内存读入 CPU 缓存。这一步被称为 **“读取所有权”（Read for Ownership, RFO）**   
+    **在缓存中修改**：数据读入缓存后，CPU 在缓存里修改对应的 4 个字节（计算结果）   
+    **写回（Write Back）**：等到该缓存行被换出（Evict）或者程序结束时，整条缓存行会被写回到主内存     
 
-    对于 result 数组，内存带宽实际上被消耗了**两次**：一次是 CPU “为了写而先读”，另一次是最终的“写回”
-    总的内存流量计算如下
-    读取 `X`: `N × sizeof(float)` 字节
-    读取 `Y`: `N × sizeof(float)` 字节
-    读取 `Result` (写分配): `N × sizeof(float)` 字节
-    写入 `ResultResult` (写回): `N × sizeof(float)` 字节
-    共`4 × N × sizeof(float)`字节
+    对于 result 数组，内存带宽实际上被消耗了**两次**：一次是 CPU “为了写而先读”，另一次是最终的“写回”   
+    总的内存流量计算如下   
+    读取 `X`: `N × sizeof(float)` 字节   
+    读取 `Y`: `N × sizeof(float)` 字节   
+    读取 `Result` (写分配): `N × sizeof(float)` 字节   
+    写入 `ResultResult` (写回): `N × sizeof(float)` 字节   
+    共`4 × N × sizeof(float)`字节   
 
 3. __Extra Credit:__ (points handled on a case-by-case basis)(具体问题具体分析) Improve the performance of `saxpy`.
     We're looking for a significant speedup here, not just a few percentage 
     points. If successful, describe how you did it and what a best-possible implementation on these systems might achieve. Also, if successful, come tell the staff, we'll be interested. ;-)
 
-    **使用“不经过缓存的存储”（Streaming Stores / Non-temporal Stores）**
-    使用 **Non-temporal Store** 指令（如 SSE 中的 _mm_stream_ps 或 AVX 中的 _mm256_stream_ps），直接告诉 CPU：“直接把这块数据写回物理内存，不要读它，也不要把它留在缓存里占用空间。”
+    **使用“不经过缓存的存储”（Streaming Stores / Non-temporal Stores）**  
+    使用 **Non-temporal Store** 指令（如 SSE 中的 _mm_stream_ps 或 AVX 中的 _mm256_stream_ps），直接告诉 CPU：“直接把这块数据写回物理内存，不要读它，也不要把它留在缓存里占用空间。”      
 
-    **循环展开与手动预取（Loop Unrolling & Manual Prefetching）**
-    **循环展开**：一次处理 2 个或 4 个 AVX 向量（即一次处理 16 或 32 个 float）。这能减少循环计数器的开销，并给指令调度器（Out-of-Order Engine）更大的空间去安排内存请求
-    **软件预取**：使用 _mm_prefetch 指令提前将未来几十个周期后要用到的 `XX` 和 `YY` 块加载进缓存
-    **效果**：让内存总线始终处于“满载”状态，减少等待数据的“气泡”
+    **循环展开与手动预取（Loop Unrolling & Manual Prefetching） **  
+    **循环展开**：一次处理 2 个或 4 个 AVX 向量（即一次处理 16 或 32 个 float）。这能减少循环计数器的开销，并给指令调度器（Out-of-Order Engine）更大的空间去安排内存请求   
+    **软件预取**：使用 _mm_prefetch 指令提前将未来几十个周期后要用到的 `XX` 和 `YY` 块加载进缓存   
+    **效果**：让内存总线始终处于“满载”状态，减少等待数据的“气泡”   
 
-    **搬到 GPU**
+    **搬到 GPU**   
 
 Notes: Some students have gotten hung up on(纠结于) this question (thinking too hard) in the past. We expect a simple answer, but the results from running this problem might trigger more questions in your head.  Feel encouraged to come talk to the staff.
 
@@ -2346,7 +2347,7 @@ In the starter code you have been given a correct implementation of the K-means 
 
 1. Use the command `ln -s /afs/ir.stanford.edu/class/cs149/data/data.dat ./data.dat` to create a symbolic(符号) link to the dataset in your current directory (make sure you're in the `prog6_kmeans` directory). This is a large file (~800MB), so this is the preferred(首选) way to access it. However, if you'd like a local copy, you can run this command on your personal machine `scp [Your SUNetID]@myth[51-66].stanford.edu:/afs/ir.stanford.edu/class/cs149/data/data.dat ./data.dat`. Once you have the data, compile and run `kmeans` (it may take longer than usual for the program to load the data on your first try). The program will report the total runtime of the algorithm on the data.
 
-   main.cpp中附带生成数据集的实现
+   main.cpp中附带生成数据集的实现   
 
    ```bash
    # ./kmeans
@@ -2468,11 +2469,11 @@ In the starter code you have been given a correct implementation of the K-means 
    [Total Time]: 10453.474 ms
    ```
 
-   大部分时间（约 70%）消耗在 **computeAssignments** 函数中
+   大部分时间（约 70%）消耗在 **computeAssignments** 函数中   
 
 4. Based on your findings from the previous step, improve the implementation. We are looking for a speedup of about 2.1x or more (i.e $\frac{oldRuntime}{newRuntime} >= 2.1$). Please explain how you arrived at your solution, as well as what your final solution is and the associated speedup. The writeup of this process should describe a sequence of steps. We expect something of the form "I measured ... which let me to believe X. So to improve things I tried ... resulting in a speedup/slowdown of ...".
 
-   **使用 ISPC**
+   **使用 ISPC**   
    
    ```makefile
    # 修改 Makefile
@@ -2524,6 +2525,8 @@ In the starter code you have been given a correct implementation of the K-means 
    $(OBJDIR)/%.o: $(COMMONDIR)/%.cpp
    	$(CXX) $< $(CXXFLAGS) -c -o $@
    
+   ```
+
 $(OBJDIR)/main.o: $(COMMONDIR)/CycleTimer.h
    ```
    
@@ -2584,7 +2587,7 @@ $(OBJDIR)/main.o: $(COMMONDIR)/CycleTimer.h
    
 }
    ```
-   
+
    ```C++
    // 修改 kmeansThread.cpp
    /**
@@ -2598,7 +2601,7 @@ $(OBJDIR)/main.o: $(COMMONDIR)/CycleTimer.h
      delete[] minDist;
    }
    ```
-   
+
    ```bash
    # ./kmeans
    Reading data.dat...
@@ -2677,19 +2680,19 @@ $(OBJDIR)/main.o: $(COMMONDIR)/CycleTimer.h
    [computeCost]:          [91.749] ms
    [Total Time]: 4239.797 ms
    ```
-   
+
    <img src="README/image-20260105124121107.png" alt="image-20260105124121107" style="zoom:80%;" />
-   
+
    <img src="README/image-20260105124133353.png" alt="image-20260105124133353" style="zoom:80%;" />
-   
-   我测量了computeAssignments，这让我相信 computeAssignments 是性能瓶颈。 因此，为了改进性能，我尝试了优化computeAssignments，使其在多核上的SIMD并发执行每个点的分配，最终实现了2.46x 的加速/减速效果
-   
+
+   我测量了computeAssignments，这让我相信 computeAssignments 是性能瓶颈。 因此，为了改进性能，我尝试了优化computeAssignments，使其在多核上的SIMD并发执行每个点的分配，最终实现了2.46x 的加速/减速效果   
+
    ```bash
    # 系统警告CPU 必须从内存中“四处搜集”不连续的数据来填充向量寄存器，继续优化
    compute_assignments.ispc:32:23: Performance Warning: Gather required to load value.
            double diff = args->data[m * D + i] - args->clusterCentroids[k * D + i];
    ```
-   
+
    ```C++
    // 修改 compute_assignments.ispc
    typedef struct {
@@ -2752,7 +2755,7 @@ $(OBJDIR)/main.o: $(COMMONDIR)/CycleTimer.h
    
    }
    ```
-   
+
    ```bash
    # ./kmeans
    Reading data.dat...
@@ -2831,17 +2834,17 @@ $(OBJDIR)/main.o: $(COMMONDIR)/CycleTimer.h
    [computeCost]:          [91.953] ms
    [Total Time]: 4075.095 ms
    ```
-   
+
    <img src="README/image-20260105121849057.png" alt="image-20260105121849057" style="zoom:80%;" />
-   
+
    <img src="README/image-20260105123652843.png" alt="image-20260105123652843" style="zoom:80%;" />
+
+   由于系统警告CPU 必须从内存中“四处搜集”不连续的数据来填充向量寄存器，继续优化，从在SIMD计算每个点的分配，改为在SIMD计算每个点的各个维度的平方距离，实现了2.56x 的加速/减速效果    
+
    
-   由于系统警告CPU 必须从内存中“四处搜集”不连续的数据来填充向量寄存器，继续优化，从在SIMD计算每个点的分配，改为在SIMD计算每个点的各个维度的平方距离，实现了2.56x 的加速/减速效果
-   
-   
-   
+
    **使用`std::thread`**
-   
+
    ```C++
    // 修改 kmeansThread.cpp
    void workerThreadStart(WorkerArgs *const args, int index, int numThreads, double *minDist)
@@ -2888,7 +2891,7 @@ $(OBJDIR)/main.o: $(COMMONDIR)/CycleTimer.h
      delete[] minDist;
    }
    ```
-   
+
    ```bash
    # ./kmeans
    Reading data.dat...
@@ -2967,18 +2970,18 @@ $(OBJDIR)/main.o: $(COMMONDIR)/CycleTimer.h
    [computeCost]:          [87.968] ms
    [Total Time]: 4788.625 ms
    ```
-   
+
    <img src="README/image-20260105150440461.png" alt="image-20260105150440461" style="zoom:80%;" />
-   
+
    <img src="README/image-20260105150455271.png" alt="image-20260105150455271" style="zoom:80%;" />
-   
-   我测量了computeAssignments，这让我相信 computeAssignments 是性能瓶颈。 因此，为了改进性能，我尝试了优化computeAssignments，使其在多线程上并发执行每个点的分配，最终实现了2.18x 的加速/减速效果
-   
-   **使用std::thread的最终图像和顺序的最终图像一致，但是使用ispc的最终图像和顺序的最终图像不一致**
-   可能原因
-   **浮点数计算的非结合律 (Floating-point Non-associativity)**
-   在计算机中，**`(a+b)+c` 并不严格等于 `a+(b+c)`**。因为浮点数的精度有限，改变加法的顺序会导致极其微小的舍入误差（Rounding Error）
-   
+
+   我测量了computeAssignments，这让我相信 computeAssignments 是性能瓶颈。 因此，为了改进性能，我尝试了优化computeAssignments，使其在多线程上并发执行每个点的分配，最终实现了2.18x 的加速/减速效果   
+
+   **使用std::thread的最终图像和顺序的最终图像一致，但是使用ispc的最终图像和顺序的最终图像不一致**   
+   可能原因   
+   **浮点数计算的非结合律 (Floating-point Non-associativity)**   
+   在计算机中，**`(a+b)+c` 并不严格等于 `a+(b+c)`**。因为浮点数的精度有限，改变加法的顺序会导致极其微小的舍入误差（Rounding Error）   
+
    ```C++
    // 在 kmeansThread.cpp 加入下面内容计算 Final Cost 和 Total Cost
    double totalCost = 0;
@@ -2988,7 +2991,7 @@ $(OBJDIR)/main.o: $(COMMONDIR)/CycleTimer.h
    }
    printf("[Total Cost]: %.52lf\n", totalCost);
    ```
-   
+
    ```bash
    # std::thread version
    # ./kmeans
@@ -2998,7 +3001,7 @@ $(OBJDIR)/main.o: $(COMMONDIR)/CycleTimer.h
    [Total Cost]: 5485003.3593475511297583580017089843750000000000000000000000
    [Total Time]: 4911.091 ms
    ```
-   
+
    ```bash
    # original version
    # ./kmeans
@@ -3008,7 +3011,7 @@ $(OBJDIR)/main.o: $(COMMONDIR)/CycleTimer.h
    [Total Cost]: 5485003.3593475511297583580017089843750000000000000000000000
    [Total Time]: 10873.643 ms
    ```
-   
+
    ```bash
    # ispc version
    # ./kmeans
@@ -3018,8 +3021,8 @@ $(OBJDIR)/main.o: $(COMMONDIR)/CycleTimer.h
    [Total Cost]: 5485003.3593475511297583580017089843750000000000000000000000
    [Total Time]: 4342.020 ms
    ```
-   
-   **ISPC 版本的 Total Cost 与顺序版本完全一致**。这证明了并行化没有引入逻辑错误
+
+   **ISPC 版本的 Total Cost 与顺序版本完全一致**。这证明了并行化没有引入逻辑错误   
 
 Constraints:
 - You may only modify code in `kmeansThread.cpp`. You are not allowed to modify the `stoppingConditionMet` function and you cannot change the interface to `kMeansThread`, but anything is fair game (e.g. you can add new members to the `WorkerArgs` struct, rewrite functions, allocate new arrays, etc.). However...
